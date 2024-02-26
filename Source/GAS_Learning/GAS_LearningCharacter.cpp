@@ -10,6 +10,9 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "AbilitySystemComponent.h"
+#include "Public/BaseAttributeSet.h"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -28,4 +31,16 @@ void AGAS_LearningCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
+	UAbilitySystemComponent* AbilitySystemComponent = this->FindComponentByClass<UAbilitySystemComponent>();
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UBaseAttributeSet::GetHPAttribute()).AddUObject(this, &AGAS_LearningCharacter::OnHPAttributeChanged);
+	}
+
 }
+
+void AGAS_LearningCharacter::OnHPAttributeChanged(const FOnAttributeChangeData& Data)
+{
+	HPChangedEvent.Broadcast(Data.NewValue);
+}
+

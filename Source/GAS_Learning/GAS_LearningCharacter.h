@@ -5,13 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "GameplayEffectTypes.h"
 #include "GAS_LearningCharacter.generated.h"
 
-class USpringArmComponent;
-class UCameraComponent;
-class UInputMappingContext;
-class UInputAction;
-struct FInputActionValue;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHPChanged, float, NewHP);
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -28,5 +26,10 @@ public:
 	// To add mapping context
 	virtual void BeginPlay();
 
+	UPROPERTY(BlueprintAssignable, Category = "Ability")
+	FOnHPChanged HPChangedEvent;
+
+
+	void OnHPAttributeChanged(const FOnAttributeChangeData& Data);
 };
 
